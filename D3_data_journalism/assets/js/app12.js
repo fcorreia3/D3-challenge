@@ -101,8 +101,10 @@ function makeResponsive() {
     // new circles
     function renderCircles(circlesGroup, xLinearScale, chosenXAxis, 
         yLinearScale, chosenYAxis) {
+          console.log("Here")
   
-      circlesGroup.transition()
+      circlesGroup
+      .transition()
         .duration(1000)
         .attr("cx", d => xLinearScale(d[chosenXAxis]))
         .attr("cy", d => yLinearScale(d[chosenYAxis])
@@ -206,7 +208,7 @@ function makeResponsive() {
   
       // Create group for 3 Y- AXIS LABELS
       var YlabelsGroup = chartGroup.append("g")
-        .attr("transform", "rotate(-90)")
+        .attr("transform", "translate(-10, 200) rotate(-90)")
         .attr("y", 0 - margin.left)
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
@@ -257,7 +259,38 @@ function makeResponsive() {
             xAxis = renderXaxis(xLinearScale, xAxis);
   
             // updates circles with new x values
-            circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+            //circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+            // circlesGroup
+            // .transition()
+            //   .duration(1000)
+            //   .attr("cx", d => xLinearScale(d[chosenXAxis]))
+            //   .attr("cy", d => yLinearScale(d[chosenYAxis])
+            //   );
+
+            d3.selectAll("circle").each(function() {
+              d3.select(this)
+                .transition()
+                .attr("cx", function(d) {
+                  return xLinearScale(d[chosenXAxis]);
+                })
+                // .enter()
+                // .append("text")
+                // .attr("x", function(d) {
+                //   return xLinearScale(d[chosenXAxis]);
+                // })
+                // .text(d => (d.abbr))
+                .duration(300);
+            });
+
+            // chartGroup.selectAll().data(censusData)
+            //   .enter()
+            //   .append("text")
+            //   .attr("x", d => xLinearScale(d[chosenXAxis]))
+            //   .attr("y", d => yLinearScale(d[chosenYAxis]))
+            //   .style("font-size", "13px")
+            //   .style("text-anchor", "middle")
+            //   .style('fill', 'white')
+            //   .text(d => (d.abbr));
   
             // changes classes to change bold text
             if (chosenXAxis === "age") {
@@ -303,18 +336,30 @@ function makeResponsive() {
           var value = d3.select(this).attr("value");
           console.log(this);
           if (value !== chosenYAxis) {
-            // replaces chosenXAxis with value
+            // replaces chosenYAxis with value
             chosenYAxis = value;
             console.log(chosenYAxis);
 
-            // updates x scale for new data
+            // updates y scale for new data
             yLinearScale = yScale(censusData, chosenYAxis);
   
-            // updates x axis with transition
+            // updates y axis with transition
             yAxis = renderYaxis(yLinearScale, yAxis);
   
-            // updates circles with new x values
-            circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+            // updates circles with new y values
+            // circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+            d3.selectAll("circle").each(function() {
+              // Each state circle gets a transition for it's new attribute.
+              // This will lend the circle a motion tween
+              // from it's original spot to the new location.
+              d3
+                .select(this)
+                .transition()
+                .attr("cx", function(d) {
+                  return yLinearScale(d[chosenYAxis]);
+                })
+                .duration(300);
+            });
   
             // changes classes to change bold text
             if (chosenYAxis === "obesity") {
