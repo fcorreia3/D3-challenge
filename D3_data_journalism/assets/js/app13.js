@@ -6,7 +6,7 @@ function makeResponsive() {
     var svgArea = d3.select("body").select("svg");
     
     if (!svgArea.empty()) {
-    svgArea.remove();
+    svgArea.remove();a
     }
     
     // Set SVG wrapper dimensions and margins, width and height of the graph
@@ -170,6 +170,7 @@ function makeResponsive() {
         .data(censusData)
         .enter()
         .append("text")
+        .attr("class","stateText")
         .attr("x", d => xLinearScale(d[chosenXAxis]))
         .attr("y", d => yLinearScale(d[chosenYAxis]))
         .style("font-size", "13px")
@@ -282,6 +283,16 @@ function makeResponsive() {
                 .duration(300);
             });
 
+            d3.selectAll('.stateText').each(function(){
+              d3.select(this)
+              .transition()
+              .attr("x", function(d){
+                console.log(xScale(d,chosenXAxis))
+                return xLinearScale(d[chosenXAxis]);
+              })
+              .duration(300);
+            })
+
             // chartGroup.selectAll().data(censusData)
             //   .enter()
             //   .append("text")
@@ -360,6 +371,15 @@ function makeResponsive() {
                 })
                 .duration(300);
             });
+            d3.selectAll('.stateText').each(function(){
+              d3.select(this)
+              .transition()
+              .attr("x", function(d){
+                console.log(xScale(d,chosenYAxis))
+                return yLinearScale(d[chosenYAxis]);
+              })
+              .duration(300);
+            })
   
             // changes classes to change bold text
             if (chosenYAxis === "obesity") {
